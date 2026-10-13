@@ -100,6 +100,10 @@ export class EventManager {
       // 回到前台立即重置退避计数器并重连
       // Reset backoff counter and reconnect immediately when returning to foreground
       this.plugin.websocket?.triggerReconnect()
+    } else if (!this.plugin.websocket?.isConnected()) {
+      // 电脑端关了后台降速后 visibilitychange 不再触发，改由窗口获得焦点时补一次重连
+      // Desktop: with background throttling off, visibilitychange no longer fires; reconnect on focus instead
+      this.plugin.websocket?.triggerReconnect()
     }
   }
 
